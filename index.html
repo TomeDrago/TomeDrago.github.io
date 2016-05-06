@@ -1,0 +1,51 @@
+<html>
+	<head>
+		<title>bardzo ³atwa gra</title>
+		<meta charset="utf-8" />
+		<style>
+			#big {
+				background-color: blue;
+				width: 100%;
+				height: 100%;
+				position: relative;
+			}
+			
+			#small {
+				background-color: green;
+				width: 20px;
+				height: 20px;
+				position: absolute;
+				top: calc(50% - 10px);
+				left: calc(50% - 10px);
+				font-size: 50px;
+				line-height: 500px;
+				text-align: center;
+			}
+		</style>
+		<script>
+			var won = false;
+		
+			function turtle() {
+				won = true;
+				small.style.width = small.style.height = '500px';
+				small.style.left = small.style.top = 'calc(50% - 250px)';
+				small.innerHTML = "WYGRA£EŒ";
+			}
+			
+			function run() {
+				if (!won) {
+					var small = document.getElementById('small');
+					var big = document.getElementById('big');
+					small.style.top = Math.floor(Math.random() * (big.clientHeight - small.clientHeight)) + 'px';
+					small.style.left = Math.floor(Math.random() * (big.clientWidth - small.clientWidth)) + 'px';
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<div id="big">
+			<div id="small" onmouseenter="run()" onmousedown="turtle()">
+			</div>
+		</div>
+	</body>
+</html>
