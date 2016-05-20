@@ -13,6 +13,12 @@
 				width: 100vw;
 				height: 100vh;
 			}
+			
+			#napis {
+				font-size: 15vw;
+				line-height: 100vh;
+				text-align: center;
+			}
 		
 			.człowiek {
 				background-color: green;
@@ -29,47 +35,56 @@
 			}
 		</style>
 		<script>
-			var tablica = [], plansza;
+			var prawdopodobieństwoCzłowieka = .2, prawdopodobieństwoPrzeżycia = .5;
+			var tablica = [], plansza, liczba;
 			
 			function ludzie() {
-				var rząd = Math.floor(Math.random() * 47 + 1);
-				var kolumna = Math.floor(Math.random() * 47 + 1);
+				var rząd = Math.floor(Math.random() * 50);
+				var kolumna = Math.floor(Math.random() * 50);
 				
 				var sąsiedzi = 0;
-				if (tablica[rząd - 1][kolumna - 1] === 1) {
+				if (rząd > 0 && kolumna > 0 && tablica[rząd - 1][kolumna - 1] === 1) {
 					sąsiedzi += 1;
 				}
-				if (tablica[rząd - 1][kolumna] === 1) {
+				if (rząd > 0 && tablica[rząd - 1][kolumna] === 1) {
 					sąsiedzi += 1;
 				}
-				if (tablica[rząd - 1][kolumna + 1] === 1) {
+				if (rząd > 0 && kolumna < 49 && tablica[rząd - 1][kolumna + 1] === 1) {
 					sąsiedzi += 1;
 				}
-				if (tablica[rząd + 1][kolumna - 1] === 1) {
+				if (rząd < 49 && kolumna > 0 && tablica[rząd + 1][kolumna - 1] === 1) {
 					sąsiedzi += 1;
 				}
-				if (tablica[rząd + 1][kolumna] === 1) {
+				if (rząd < 49 && tablica[rząd + 1][kolumna] === 1) {
 					sąsiedzi += 1;
 				}
-				if (tablica[rząd + 1][kolumna + 1] === 1) {
+				if (rząd < 49 && kolumna < 49 && tablica[rząd + 1][kolumna + 1] === 1) {
 					sąsiedzi += 1;
 				}
-				if (tablica[rząd][kolumna - 1] === 1) {
+				if (kolumna > 0 && tablica[rząd][kolumna - 1] === 1) {
 					sąsiedzi += 1;
 				}
-				if (tablica[rząd][kolumna + 1] === 1) {
+				if (kolumna < 49 && tablica[rząd][kolumna + 1] === 1) {
 					sąsiedzi += 1;
 				}
 				
 				var kwadrat = document.getElementById(rząd + '-' + kolumna);
 				
-				if (sąsiedzi === 2) {
-				} else if (sąsiedzi === 3) {
-					tablica[rząd][kolumna] = 1;
-					kwadrat.className = 'człowiek';
+				if (tablica[rząd][kolumna] === 0) {
+					if (sąsiedzi === 3) {
+						tablica[rząd][kolumna] = 1;
+						liczba += 1;
+						kwadrat.className = 'człowiek';
+					}
 				} else {
-					tablica[rząd][kolumna] = 0;
-					kwadrat.className = 'brak-człowieka';
+					if (sąsiedzi !== 2 && Math.random() > prawdopodobieństwoPrzeżycia) {
+						tablica[rząd][kolumna] = 0;
+						liczba -= 1;
+						if (liczba === 0) {
+							wygrałeś();
+						}
+						kwadrat.className = 'brak-człowieka';
+					}
 				}
 			}
 			
@@ -85,20 +100,28 @@
 				var rządKolumna = kwadrat.id.split('-');
 				var rząd = rządKolumna[0];
 				var kolumna = rządKolumna[1];
-				tablica[rząd][kolumna] = 0;
-				kwadrat.className = 'brak-człowieka';
+				if (tablica[rząd][kolumna] === 1) {
+					tablica[rząd][kolumna] = 0;
+					liczba -= 1;
+					if (liczba === 0) {
+						wygrałeś();
+					}
+					kwadrat.className = 'brak-człowieka';
+				}
 			}
 			
 			function rozpocznij() {
+				liczba = 0;
 				plansza = document.getElementById('plansza');
 				var rząd, kolumna;
 				for (rząd = 0; rząd < 50; rząd += 1) {
 					tablica[rząd] = [];
 					for (kolumna = 0; kolumna < 50; kolumna += 1) {
-						if (Math.random() < .7) {
+						if (Math.random() > prawdopodobieństwoCzłowieka) {
 							tablica[rząd][kolumna] = 0;
 						} else {
 							tablica[rząd][kolumna] = 1;
+							liczba += 1;
 						}
 						var kwadrat = document.createElement('div');
 						kwadrat.id = rząd + '-' + kolumna;
@@ -112,6 +135,14 @@
 					}
 				}
 				setInterval(ludzieLudzie, 100);
+			}
+			
+			function wygrałeś() {
+				var napis = document.createElement('div');
+				napis.id = "napis";
+				napis.innerHTML = "WYGRAŁEŚ";
+				document.body.removeChild(plansza);
+				document.body.appendChild(napis);
 			}
 			
 			setTimeout(rozpocznij, 1000);
