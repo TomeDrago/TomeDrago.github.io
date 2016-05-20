@@ -3,6 +3,12 @@
 		<title>życie</title>
 		<meta charset="utf-8" />
 		<style>
+			body {
+				margin: none;
+				padding: none;
+				overflow: hidden;
+			}
+		
 		    #plansza {
 				width: 100vw;
 				height: 100vh;
@@ -10,15 +16,15 @@
 		
 			.człowiek {
 				background-color: green;
-				width: 1vw;
-				height: 1vh;
+				width: 2vw;
+				height: 2vh;
 				position: absolute;
 			}
 			
 			.brak-człowieka {
 				background-color: white;
-				width: 1vw;
-				height: 1vh;
+				width: 2vw;
+				height: 2vh;
 				position: absolute;
 			}
 		</style>
@@ -26,8 +32,8 @@
 			var tablica = [], plansza;
 			
 			function ludzie() {
-				var rząd = Math.floor(Math.random() * 97 + 1);
-				var kolumna = Math.floor(Math.random() * 97 + 1);
+				var rząd = Math.floor(Math.random() * 47 + 1);
+				var kolumna = Math.floor(Math.random() * 47 + 1);
 				
 				var sąsiedzi = 0;
 				if (tablica[rząd - 1][kolumna - 1] === 1) {
@@ -57,7 +63,8 @@
 				
 				var kwadrat = document.getElementById(rząd + '-' + kolumna);
 				
-				if (sąsiedzi === 2 || sąsiedzi === 3) {
+				if (sąsiedzi === 2) {
+				} else if (sąsiedzi === 3) {
 					tablica[rząd][kolumna] = 1;
 					kwadrat.className = 'człowiek';
 				} else {
@@ -85,26 +92,26 @@
 			function rozpocznij() {
 				plansza = document.getElementById('plansza');
 				var rząd, kolumna;
-				for (rząd = 0; rząd < 100; rząd += 1) {
+				for (rząd = 0; rząd < 50; rząd += 1) {
 					tablica[rząd] = [];
-					for (kolumna = 0; kolumna < 100; kolumna += 1) {
-						if (Math.random() < .955) {
+					for (kolumna = 0; kolumna < 50; kolumna += 1) {
+						if (Math.random() < .9) {
 							tablica[rząd][kolumna] = 0;
 						} else {
 							tablica[rząd][kolumna] = 1;
 						}
 						var kwadrat = document.createElement('div');
 						kwadrat.id = rząd + '-' + kolumna;
-						kwadrat.style.left = kolumna + 'vw' ;
-						kwadrat.style.top = rząd + 'vh' ;
+						kwadrat.style.left = (kolumna * 2) + 'vw' ;
+						kwadrat.style.top = (rząd * 2) + 'vh' ;
 						kwadrat.className = tablica[rząd][kolumna] === 1 ? 'człowiek' : 'brak-człowieka';
 						kwadrat.onmouseover = usuńKwadrat;
-						kwadrat.onclick = usuńKwadrat
+						kwadrat.onclick = usuńKwadrat;
 						plansza.appendChild(kwadrat);
 					
 					}
 				}
-				setInterval(ludzieLudzie, 1000);
+				setInterval(ludzieLudzie, 100);
 			}
 			
 			setTimeout(rozpocznij, 1000);
